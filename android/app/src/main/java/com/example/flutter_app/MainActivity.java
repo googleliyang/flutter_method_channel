@@ -1,5 +1,7 @@
 package com.example.flutter_app;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 
 import java.util.Map;
@@ -27,7 +29,17 @@ public class MainActivity extends FlutterActivity {
         if (methodCall.method.equals("getMessage")) {
            result.success("Android say hi."+ ((String) arguments.get("from")));
         }
+//        openWebPage("http://www.bitying.com");
       }
     });
+  }
+
+  public void openWebPage(String url) {
+    Uri webpage = Uri.parse(url);
+    Intent intent = new Intent(Intent.ACTION_VIEW, webpage);
+    if (intent.resolveActivity(getPackageManager()) != null) {
+      startActivity(intent);
+    }
+
   }
 }
