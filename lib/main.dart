@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 void main() => runApp(MyApp());
 
@@ -28,6 +29,10 @@ class MyApp extends StatelessWidget {
 class MyHomePage extends StatefulWidget {
   MyHomePage({Key key, this.title}) : super(key: key);
 
+
+
+
+
   // This widget is the home page of your application. It is stateful, meaning
   // that it has a State object (defined below) that contains fields that affect
   // how it looks.
@@ -45,6 +50,22 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
+
+  static const platform = const MethodChannel('demo.gawkat.com/info');
+
+  String _message = 'No message yet...';
+
+  @override
+  void initState() {
+
+    _getMessage().then((String msg) {
+       setState(() {
+         _message = msg;
+       });
+    });
+  }
+
+
 
   void _incrementCounter() {
     setState(() {
@@ -95,7 +116,7 @@ class _MyHomePageState extends State<MyHomePage> {
           spacing: 8.0, // gap between adjacent chips
           runSpacing: 4.0,
           children: <Widget>[
-            TextField(),
+            Text(_message ?? "123"),
 //            Column(
 //             children: <Widget>[
 //               TextField(),
@@ -133,5 +154,19 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Icon(Icons.add),
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
+
+  }
+
+  Future<String> _getMessage() async {
+    var sendMap = <String, dynamic> {
+     'from' : 'boy',
+    };
+    String value;
+    try {
+      value = await platform.invokeMethod('getMessage', sendMap);
+    } catch(e) {
+      print(e);
+    }
+    return value;
   }
 }
